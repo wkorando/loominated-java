@@ -37,7 +37,7 @@ public class FuturesSolutionShutdownOnError {
 				}
 			}).collect(Collectors.joining(", ", "{ ", " }"));
 			
-			
+//			Option 2			
 //			CompletableFuture<String> allOfFuture = CompletableFuture.allOf(cf1, cf2, cf3, cf4)
 //					.thenApply(_ -> cf1.join() + "," + cf2.join() + "," + cf3.join() + "," + cf4.join())
 //					.exceptionally(err -> {
@@ -58,7 +58,8 @@ public class FuturesSolutionShutdownOnError {
 //			}).join();
 //			
 //			return "";
-			
+
+//			Option 3						
 //			CompletableFuture.runAsync(() -> {
 //					cfs.map(f -> {
 //					try {
