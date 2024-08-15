@@ -1,13 +1,10 @@
-package com.fly.us;
+package step4;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
-import java.util.concurrent.StructuredTaskScope.Subtask;
-import java.util.concurrent.StructuredTaskScope.Subtask.State;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.TimeUnit;
+
+import com.fly.us.WebServiceHelper;
 
 public class StructuredConcurrencyShutdownOnSuccess {
 
@@ -24,11 +21,23 @@ public class StructuredConcurrencyShutdownOnSuccess {
 
 	private String callWebServices() throws Throwable {
 		try (var scope = StructuredTaskScope.<String, String>open(Joiner.anySuccessfulResultOrThrow())) {
-			scope.fork(() -> WebServiceHelper.callWebService("success-jet"));// 500ms
-			scope.fork(() -> WebServiceHelper.callWebService("http-ok-airways"));// 500ms
-			scope.fork(() -> WebServiceHelper.callWebService("two-hundred-airlines"));// 500ms
-			scope.fork(() -> WebServiceHelper.callWebService("delayed-travel"));// 5000ms
-			return scope.join();// Map this to the return type of subtask
+
+			scope.fork(() -> {
+				TimeUnit.MILLISECONDS.sleep(500);
+				System.out.println("a");
+				return "a";
+			});
+			scope.fork(() -> {
+				TimeUnit.MILLISECONDS.sleep(1500);
+				System.out.println("b");
+				return "b";
+			});
+			scope.fork(() -> {
+				TimeUnit.MILLISECONDS.sleep(1000);
+				System.out.println("c");
+				return "c";
+			});
+			return scope.join();
 		} catch (Exception e) {
 			throw e;
 		}

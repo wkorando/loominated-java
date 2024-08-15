@@ -9,7 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 public class WebServiceHelper {
 	final static String BASE_URL = "http://localhost:8080/";
@@ -31,14 +31,16 @@ public class WebServiceHelper {
 		}
 	}
 	
-	public static CompletableFuture<String> returnCf(String endpoint, Executor exectuor){
+	public static CompletableFuture<String> returnCf(String endpoint, 
+			ExecutorService executorService){
 		return CompletableFuture.supplyAsync(() -> {
             try {
             	return WebServiceHelper.callWebService(endpoint);
             } catch (Exception e) {
+            	executorService.shutdownNow();
                 throw new RuntimeException(e);
             }
-        }, exectuor);
+        }, executorService);
 	}
 	
 	public static void waitForUser(String message) throws IOException {
