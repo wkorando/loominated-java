@@ -1,4 +1,4 @@
-# Fly US - Project Loom Demonstrator
+# Loominated Java
 
 The purpose of this project is to demonstrate the three central features of project loom; Virtual Threads, Structured Concurrency, and Scoped Values. Primarily the project is demonstrating Structured Concurrency as it will have the most impact on how Java developers design and write applications that execute tasks concurrently. 
 
@@ -17,7 +17,60 @@ Structured Concurrency, currently in preview as of JDK 23, is a another feature 
 
 ## About the Project
 
-The purpose of the project is demonstrate the "current state" of doing concurrent programming in Java and how Structured Concurrency improves upon it. 
+The purpose of the project is demonstrate the "current state" of doing concurrent programming in Java and how Structured Concurrency improves upon it.
+
+The "task":
+
+```java
+() -> {
+	String result;
+	TimeUnit.MILLISECONDS.sleep(1500);
+	result = "b";
+	System.out.println(result);
+	return result;
+}
+```
+
+## Demonstrate Virtual Threads in Action 
+
+Being suspended, placed in queue, and resumed
+
+What causes a Virtual Thread to resume
+
+The comparative memory costs
+
+
+## Step 1 - Serial/Linear Programming
+
+The mindshare and difficulty of concurrent programming; configuring and managing threadpools, error handling and rollback when a task fails, the change in programming model, and disincentivized re-writing tasks from executing concurrently. Though meant that the time to execute tasks was the combined time to execute all the tasks, like in this example. This might often result in slow response times for clients. Like in this example. 
+
+## Step 2 - Concurrent Programming Pre-Virtual Threads
+
+Prior to virtual threads, when considering splitting a unit of work to be executed in concurrent tasks. This would making a choice between the best way of handling 
+
+## Step 3 - The Difficulties of Concurrent Programming Pre-Structured Concurrency
+
+Splitting up a unit of work and executing it as concurrent tasks, wasn't always trivial, as we will review in these code examples. 
+
+### Cancel Propagation
+
+### Error Handling
+
+#### Debugging
+
+
+## Step 4 - Concurrent Programming with Structured Concurrency
+
+### Refactoring
+
+### Configuring Joiner Policies
+
+### Custom Cancellation Policies
+
+
+
+## Step 5 - Using Scoped Values
+
 
 ### Current State
 
@@ -33,6 +86,8 @@ Various ways of implementing a solution that can be broken into sub tasks execut
 
 4. [FuturesSolutionShutdownOnSuccess](src/main/java/com/fly/us/FuturesSolutionShutdownOnSuccess.java) - Alternatively, maybe you want to get the first successful result. This example demonstrates that behavior. 
 
-### Using Structured Concurrency
+### Error Handling
+
+### Debugging
 
 

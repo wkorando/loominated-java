@@ -74,6 +74,9 @@ class CancelAfterTwoFailures<T> implements Predicate<Subtask<? extends T>> {
 
 	@Override
 	public boolean test(Subtask<? extends T> subtask) {
-		return subtask.state() == Subtask.State.FAILED && failedCount.incrementAndGet() >= 2;
+		return subtask.state() == Subtask.State.FAILED 
+				&& failedCount.incrementAndGet() >= 2;
+		
+		
 	}
 }
