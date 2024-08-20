@@ -1,16 +1,14 @@
 # Loominated Java
 
-The purpose of this project is to demonstrate the three central features of project loom; Virtual Threads, Structured Concurrency, and Scoped Values. Primarily the project is demonstrating Structured Concurrency as it will have the most impact on how Java developers design and write applications that execute tasks concurrently. 
-
-The basic premise of the application is a service for estimating the cost of flying between two locations by polling price estimates from multiple airlines. 
+The purpose of this project is to demonstrate the three central features of project loom; Virtual Threads, Structured Concurrency, and Scoped Values. Primarily the project is demonstrating how Structured Concurrency will introduce a new coding model to Java that greatly improves and simplifies the process of writing, reasoning about, and debugging concurrent code. 
 
 ## Virtual Threads
 
-The central feature of Project Loom, virtual threads separate the concept of threads into two distinct parts. The Platform Thread, which is functionally similar to old threads, with a close relationship to underlying OS threads. And Virtual Threads, which exist in memory only and run on top of platform threads. For a high-level overview of virtual threads, see this video: https://www.youtube.com/watch?v=bOnIYy3Y5OA.  
+The central feature of Project Loom, virtual threads separate the concept of threads into two distinct parts. The Platform Thread, which is functionally similar to old threads, with a close relationship to underlying OS threads. And Virtual Threads, which exist in memory only and run on top of platform threads. For a high-level overview of virtual threads, see this video: [https://www.youtube.com/watch?v=bOnIYy3Y5OA](https://www.youtube.com/watch?v=bOnIYy3Y5OA). For a more in-depth explanation on virtual threads be sure to read the [JEP 444](https://openjdk.org/jeps/444). 
 
 ## Structured Concurrency
 
-Structured Concurrency, currently in preview as of JDK 23, is a another feature part of project loom, that's designed to allow developers to break a unit of work into multiple tasks that can be executed simultaneously. The benefit structured concurrency provides, if for shutdown, cancellation, and error handling of the tasks being executed in parallel. 
+Structured Concurrency, currently in preview as of JDK 23, is another feature part of project loom, that's designed to allow developers to break a unit of work into multiple tasks that can be executed simultaneously. The benefit structured concurrency provides, if for shutdown, cancellation, and error handling of the tasks being executed in parallel. 
 
 ## Scoped Values
 
@@ -19,7 +17,11 @@ Structured Concurrency, currently in preview as of JDK 23, is a another feature 
 
 The purpose of the project is demonstrate the "current state" of doing concurrent programming in Java and how Structured Concurrency improves upon it.
 
-The "task":
+As of Aug 2024, you will need to use the Loom EA build to run this project. Loom EA build are available here: 
+
+The goal of structured concurrency is to greatly improve the ease with which a unit of work that could be executed in parallel to be broken down into tasks and executed in parallel. Typically such tasks would be calls to a database, web service, or some other external service. In this project, the "tasks" will look like this:
+
+**TODO** Create simple tasks, that take return value and 
 
 ```java
 () -> {
@@ -30,6 +32,8 @@ The "task":
 	return result;
 }
 ```
+
+The purpose of these "tasks" is to eliminate the need for any external dependencies, allow for the easy configuration and visualization for how long a task takes to execute (including demonstrating a "stuck" task), and also to easily configure what happens when a task fails (by simply having the task throw an exception). When looking at the examples, and how they might apply to your real world projects, just imagine a call to a database, or web service in place of the above runnable task. 
 
 ## Demonstrate Virtual Threads in Action 
 

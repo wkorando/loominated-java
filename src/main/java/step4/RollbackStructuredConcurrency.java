@@ -7,13 +7,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class StructuredConcurrency {
+public class RollbackStructuredConcurrency {
 
 	public static void main(String... args) throws Throwable {
 
 //		WebServiceHelper.waitForUser("Press enter to continue.");
 
-		var instance = new StructuredConcurrency();
+		var instance = new RollbackStructuredConcurrency();
 		String results = instance.callWebServices();
 		System.out.println(results);
 
