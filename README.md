@@ -21,7 +21,7 @@ As of Aug 2024, you will need to use the Loom EA build to run this project. Loom
 
 The goal of structured concurrency is to greatly improve the ease with which a unit of work that could be executed in parallel to be broken down into tasks and executed in parallel. Typically such tasks would be calls to a database, web service, or some other external service. In this project, the "tasks" will look like this:
 
-**TODO** Create simple tasks, that take return value and 
+**TODO** Create simple tasks, that take value to be returned, how long task should run, and rollback handling. 
 
 ```java
 () -> {
