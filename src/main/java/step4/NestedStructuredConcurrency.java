@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 
 import com.fly.us.WebServiceHelper;
 
+import common.CommonUtils;
+
 public class NestedStructuredConcurrency {
 
 	public static void main(String... args) throws Throwable {
@@ -24,38 +26,14 @@ public class NestedStructuredConcurrency {
 
 	private String callWebServices() throws Throwable {
 		try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
-			scope.fork(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(1500);
-				result = "a";
-				System.out.println(result);
-				return result;
-			});
-			scope.fork(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(1500);
-				result = "b";
-				System.out.println(result);
-				return result;
-			});
+			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> {
 				String parentResult = "c";
 				try (var nestedScope = StructuredTaskScope
 						.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
-					nestedScope.fork(() -> {
-						String result;
-						TimeUnit.MILLISECONDS.sleep(500);
-						result = parentResult + "-sub-a";
-						System.out.println(result);
-						return result;
-					});
-					nestedScope.fork(() -> {
-						String result;
-						TimeUnit.MILLISECONDS.sleep(500);
-						result = parentResult + "-sub-b";
-						System.out.println(result);
-						return result;
-					});
+					nestedScope.fork(() -> CommonUtils.task("A", 500));
+					nestedScope.fork(() -> CommonUtils.task("A", 500));
 					nestedScope.fork(() -> {
 						String result;
 						TimeUnit.MILLISECONDS.sleep(500);
@@ -63,9 +41,7 @@ public class NestedStructuredConcurrency {
 						System.out.println(result);
 						return result;
 					});
-					nestedScope.fork(() -> {
-						throw new RuntimeException();
-					});
+					nestedScope.fork(() -> CommonUtils.task("A", 500));
 					return nestedScope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
 				} catch (Exception e) {
 					throw e;

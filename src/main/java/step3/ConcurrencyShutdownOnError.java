@@ -13,12 +13,14 @@ import java.util.stream.Collectors;
 
 import com.fly.us.WebServiceHelper;
 
-public class FuturesSolutionShutdownOnError {
+import common.CommonUtils;
+
+public class ConcurrencyShutdownOnError {
 
 	public static void main(String... args) throws Exception {
 		WebServiceHelper.waitForUser("Press enter to continue.");
 
-		FuturesSolutionShutdownOnError instance = new FuturesSolutionShutdownOnError();
+		ConcurrencyShutdownOnError instance = new ConcurrencyShutdownOnError();
 		String result = instance.callWebServices();
 		System.out.println(result);
 
@@ -29,33 +31,11 @@ public class FuturesSolutionShutdownOnError {
 	private String callWebServices() throws Exception {
 
 		var tasks = List.<Callable<String>>of(
-				() -> {
-					String result;
-					TimeUnit.MILLISECONDS.sleep(1500);
-					result = "a";
-					System.out.println(result);
-					return result;
-				},
-				() -> {
-					String result;
-					TimeUnit.MILLISECONDS.sleep(1500);
-					result = "b";
-					System.out.println(result);
-					return result;
-				},
-				() -> {
-					String result;
-					TimeUnit.MILLISECONDS.sleep(1500);
-					result = "c";
-					System.out.println(result);
-					return result;
-				},
-				() -> {
-					TimeUnit.MILLISECONDS.sleep(100);
-					RuntimeException e = new RuntimeException("Error!");
-					e.printStackTrace();
-					throw e;
-				});
+				() -> CommonUtils.task("A", 500),
+				() -> CommonUtils.task("B", 1500),
+				() -> CommonUtils.task("C", 1000),
+				() -> CommonUtils.task("B", 100, true)
+				);
 		
 		
 		var done = new Semaphore(0);

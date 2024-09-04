@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 
 import com.fly.us.WebServiceHelper;
 
+import common.CommonUtils;
+
 public class StructuredConcurrencyShutdownOnError {
 	public static void main(String... args) throws Throwable {
 
@@ -23,27 +25,10 @@ public class StructuredConcurrencyShutdownOnError {
 	private String callWebServices() throws Throwable {
 		try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
 			
-			scope.fork(() -> {
-				TimeUnit.MILLISECONDS.sleep(500);
-				System.out.println("a");
-				return "a";
-			});
-			scope.fork(() -> {
-				TimeUnit.MILLISECONDS.sleep(1000);
-				System.out.println("b");
-				return "b";
-			});
-			scope.fork(() -> {
-				TimeUnit.MILLISECONDS.sleep(1500);
-				System.out.println("c");
-				return "c";
-			});
-			scope.fork(() -> {
-				TimeUnit.MILLISECONDS.sleep(100);
-				Exception e = new RuntimeException("Error!");
-				e.printStackTrace();
-				throw e;
-			});
+			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 500));
 
 			return scope.join().map(Subtask::get)
 					.collect(Collectors.joining(", ", "{ ", " }"));

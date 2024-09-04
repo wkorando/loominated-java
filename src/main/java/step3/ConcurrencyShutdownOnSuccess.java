@@ -7,12 +7,14 @@ import java.util.concurrent.TimeUnit;
 
 import com.fly.us.WebServiceHelper;
 
-public class FuturesSolutionShutdownOnSuccess {
+import common.CommonUtils;
+
+public class ConcurrencyShutdownOnSuccess {
 
 	public static void main(String... args) throws Exception {
 		WebServiceHelper.waitForUser("Press enter to continue.");
 
-		FuturesSolutionShutdownOnSuccess instance = new FuturesSolutionShutdownOnSuccess();
+		ConcurrencyShutdownOnSuccess instance = new ConcurrencyShutdownOnSuccess();
 		String result = instance.callWebServices();
 		System.out.println(result);
 
@@ -25,27 +27,10 @@ public class FuturesSolutionShutdownOnSuccess {
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 			var tasks = List.<Callable<String>>of(
-			() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(1500);
-				result = "a";
-				System.out.println(result);
-				return result;
-			},
-			() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(1500);
-				result = "b";
-				System.out.println(result);
-				return result;
-			},
-			() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(500);
-				result = "c";
-				System.out.println(result);
-				return result;
-			});
+					() -> CommonUtils.task("A", 500),
+					() -> CommonUtils.task("B", 1500),
+					() -> CommonUtils.task("C", 1000)
+					);
 
 			return executor.invokeAny(tasks);
 

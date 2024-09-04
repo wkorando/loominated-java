@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.fly.us.WebServiceHelper;
 
+import common.CommonUtils;
+
 public class StructuredConcurrencyShutdownOnSuccess {
 
 	public static void main(String... args) throws Throwable {
@@ -22,21 +24,9 @@ public class StructuredConcurrencyShutdownOnSuccess {
 	private String callWebServices() throws Throwable {
 		try (var scope = StructuredTaskScope.<String, String>open(Joiner.anySuccessfulResultOrThrow())) {
 
-			scope.fork(() -> {
-				TimeUnit.MILLISECONDS.sleep(500);
-				System.out.println("a");
-				return "a";
-			});
-			scope.fork(() -> {
-				TimeUnit.MILLISECONDS.sleep(1500);
-				System.out.println("b");
-				return "b";
-			});
-			scope.fork(() -> {
-				TimeUnit.MILLISECONDS.sleep(1000);
-				System.out.println("c");
-				return "c";
-			});
+			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 500));
 			return scope.join();
 		} catch (Exception e) {
 			throw e;

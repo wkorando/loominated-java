@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 
 import com.fly.us.WebServiceHelper;
 
-public class FuturesSolutionPreVirtualThreads {
+import common.CommonUtils;
+
+public class ConncurrencyPreVirtualThreads {
 	//What we'd use before loom
 	final static ExecutorService executor = Executors.newFixedThreadPool(4);	
 //	final static ExecutorService executor = Executors.newWorkStealingPool(4);
@@ -20,7 +22,7 @@ public class FuturesSolutionPreVirtualThreads {
 	public static void main(String... args) throws Exception {
 		WebServiceHelper.waitForUser("Press enter to continue.");
 
-		var instance = new FuturesSolutionPreVirtualThreads();
+		var instance = new ConncurrencyPreVirtualThreads();
 		String results = instance.callWebServices();
 		System.out.println(results);
 
@@ -31,27 +33,9 @@ public class FuturesSolutionPreVirtualThreads {
 	private String callWebServices() throws Exception {
 
 		var tasks = executor.invokeAll(List.<Callable<String>>of(
-				() -> {
-					String result;
-					TimeUnit.MILLISECONDS.sleep(500);
-					result = "a";
-					System.out.println(result);
-					return result;
-				},
-				() -> {
-					String result;
-					TimeUnit.MILLISECONDS.sleep(500);
-					result = "b";
-					System.out.println(result);
-					return result;
-				},
-				() -> {
-					String result;
-					TimeUnit.MILLISECONDS.sleep(500);
-					result = "c";
-					System.out.println(result);
-					return result;
-				}
+				() -> CommonUtils.task("A", 500),
+				() -> CommonUtils.task("B", 1500),
+				() -> CommonUtils.task("C", 1000)
 				));
 		
 		return tasks.stream()

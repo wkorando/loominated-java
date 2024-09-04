@@ -1,11 +1,14 @@
 package step4;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
 import java.util.concurrent.StructuredTaskScope.Subtask;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import common.CommonUtils;
 
 public class RollbackStructuredConcurrency {
 
@@ -24,28 +27,14 @@ public class RollbackStructuredConcurrency {
 		Joiner<String, Stream<Subtask<String>>> joiner = Joiner.allSuccessfulOrThrow();
 		try (var scope = StructuredTaskScope.open(joiner)) {
 
-			Subtask<String> task = scope.fork(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(50000000);
-				result = "a";
-				System.out.println(result);
-				return result;
-			});
-			scope.fork(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(5000000);
-				result = "b";
-				System.out.println(result);
-				return result;
-			});
-			scope.fork(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(1000000000);
-				result = "c";
-				System.out.println(result);
-				return result;
-			});
-			return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
+			Subtask<String> task1 = scope.fork(() -> CommonUtils.task("A", 500));
+			Subtask<String> task2 = scope.fork(() -> CommonUtils.task("A", 500));
+			Subtask<String> task3 = scope.fork(() -> CommonUtils.task("A", 500));
+			try {
+				return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
+			} catch (ExecutionException ee) {
+				throw ee;
+			}
 		} catch (Exception e) {
 			throw e;
 		}

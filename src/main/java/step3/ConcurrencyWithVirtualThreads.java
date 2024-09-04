@@ -10,12 +10,14 @@ import java.util.stream.Collectors;
 
 import com.fly.us.WebServiceHelper;
 
-public class FuturesSolutionWithVirtualThreads {
+import common.CommonUtils;
+
+public class ConcurrencyWithVirtualThreads {
 
 	public static void main(String... args) throws Exception {
 //		WebServiceHelper.waitForUser("Press enter to continue.");
 
-		var instance = new FuturesSolutionWithVirtualThreads();
+		var instance = new ConcurrencyWithVirtualThreads();
 		String results = instance.callWebServices();
 		System.out.println(results);
 
@@ -26,27 +28,10 @@ public class FuturesSolutionWithVirtualThreads {
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 			
 			var tasks = executor.invokeAll(List.<Callable<String>>of(
-					() -> {
-						String result;
-						TimeUnit.MILLISECONDS.sleep(5000000);
-						result = "a";
-						System.out.println(result);
-						return result;
-					},
-					() -> {
-						String result;
-						TimeUnit.MILLISECONDS.sleep(5000000);
-						result = "b";
-						System.out.println(result);
-						return result;
-					},
-					() -> {
-						String result;
-						TimeUnit.MILLISECONDS.sleep(5000000);
-						result = "c";
-						System.out.println(result);
-						return result;
-					}));
+					() -> CommonUtils.task("A", 500),
+					() -> CommonUtils.task("B", 1500),
+					() -> CommonUtils.task("C", 1000)
+					));
 			
 			return tasks.stream()
 					.map(Future::resultNow)

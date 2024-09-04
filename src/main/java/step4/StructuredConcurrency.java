@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import common.CommonUtils;
+
 public class StructuredConcurrency {
 
 	public static void main(String... args) throws Throwable {
@@ -24,27 +26,9 @@ public class StructuredConcurrency {
 		Joiner<String, Stream<Subtask<String>>> joiner = Joiner.allSuccessfulOrThrow();
 		try (var scope = StructuredTaskScope.open(joiner)) {
 
-			Subtask<String> task = scope.fork(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(50000000);
-				result = "a";
-				System.out.println(result);
-				return result;
-			});
-			scope.fork(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(5000000);
-				result = "b";
-				System.out.println(result);
-				return result;
-			});
-			scope.fork(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(1000000000);
-				result = "c";
-				System.out.println(result);
-				return result;
-			});
+			Subtask<String> task = scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 500));
 			return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
 		} catch (Exception e) {
 			throw e;

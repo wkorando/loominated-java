@@ -10,11 +10,13 @@ import java.util.stream.Collectors;
 
 import com.fly.us.WebServiceHelper;
 
-public class MultiExecutionFuturesSolutionWithVirtualThreads {
+import common.CommonUtils;
+
+public class MultiExecutionOfConcurrencyTasks {
 
 	public static void main(String... args) throws Exception {
 //		WebServiceHelper.waitForUser("Press enter to continue.");
-		final var instance = new MultiExecutionFuturesSolutionWithVirtualThreads();
+		final var instance = new MultiExecutionOfConcurrencyTasks();
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 			var tasks = executor.invokeAll(List.<Callable<String>>of(
@@ -37,34 +39,11 @@ public class MultiExecutionFuturesSolutionWithVirtualThreads {
 	private String callWebServices(boolean stall) throws Exception {
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
-			var tasks = executor.invokeAll(List.<Callable<String>>of(() -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(500);
-				result = "a";
-				System.out.println(result);
-				return result;
-			}, () -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(500);
-				result = "b";
-				System.out.println(result);
-				return result;
-			}, () -> {
-				String result;
-				TimeUnit.MILLISECONDS.sleep(500);
-				result = "c";
-				System.out.println(result);
-				return result;
-			}, () -> {
-				if(stall) {
-					TimeUnit.MILLISECONDS.sleep(500000);
-				}
-				String result;
-				TimeUnit.MILLISECONDS.sleep(500);
-				result = "d";
-				System.out.println(result);
-				return result;
-			}));
+			var tasks = executor.invokeAll(List.<Callable<String>>of(
+				() -> CommonUtils.task("A", 500),
+				() -> CommonUtils.task("B", 1500),
+				() -> CommonUtils.task("C", 1000)
+				));
 
 			return tasks.stream().map(Future::resultNow).collect(Collectors.joining(", ", "{ ", " }"));
 		}
