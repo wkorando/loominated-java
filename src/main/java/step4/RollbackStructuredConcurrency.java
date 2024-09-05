@@ -32,7 +32,7 @@ public class RollbackStructuredConcurrency {
 			Subtask<String> task3 = scope.fork(() -> CommonUtils.task("A", 500));
 			try {
 				return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
-			} catch (ExecutionException ee) {
+			} catch (Exception ee) {
 				throw ee;
 			}
 		} catch (Exception e) {
