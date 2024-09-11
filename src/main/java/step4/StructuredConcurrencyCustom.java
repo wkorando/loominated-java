@@ -28,7 +28,7 @@ public class StructuredConcurrencyCustom {
 
 	private String callWebServices() throws Throwable {
 		try (var scope = StructuredTaskScope
-				.<String, Stream<Subtask<String>>>open(Joiner.all(new CancelAfterTwoFailures<String>()))) {
+				.<String, Stream<Subtask<String>>>open(Joiner.allUntil(new CancelAfterTwoFailures<String>()))) {
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("A", 500));
