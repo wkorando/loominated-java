@@ -1,6 +1,1 @@
-jcmd 87549 Thread.dump_to_file -format=json pre-structured-concurrency-thread-dump.json
-jcmd 88882 Thread.dump_to_file -format=json pre-structured-concurrency-thread-dump-multi.json
-jcmd 86665 Thread.dump_to_file -format=json structured-concurrency-thread-dump.json
-jcmd 87178 Thread.dump_to_file -format=json structured-concurrency-thread-dump-multi.json
-
-87178
+jcmd <pid> Thread.dump_to_file -format=json <file>
