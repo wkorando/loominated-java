@@ -27,21 +27,14 @@ public class NestedStructuredConcurrency {
 	private String callWebServices() throws Throwable {
 		try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
 			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("B", 500));
 			scope.fork(() -> {
-				String parentResult = "c";
+				String parentResult = "C";
 				try (var nestedScope = StructuredTaskScope
 						.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
-					nestedScope.fork(() -> CommonUtils.task("A", 500));
-					nestedScope.fork(() -> CommonUtils.task("A", 500));
-					nestedScope.fork(() -> {
-						String result;
-						TimeUnit.MILLISECONDS.sleep(500);
-						result = parentResult + "-sub-c";
-						System.out.println(result);
-						return result;
-					});
-					nestedScope.fork(() -> CommonUtils.task("A", 500));
+					nestedScope.fork(() -> CommonUtils.task(parentResult+"-A", 500));
+					nestedScope.fork(() -> CommonUtils.task(parentResult+"-B", 500));
+					nestedScope.fork(() -> CommonUtils.task(parentResult+"-C", 500));
 					return nestedScope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
 				} catch (Exception e) {
 					throw e;

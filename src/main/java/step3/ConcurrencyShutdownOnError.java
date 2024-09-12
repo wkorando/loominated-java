@@ -11,30 +11,28 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import com.fly.us.WebServiceHelper;
-
 import common.CommonUtils;
 
 public class ConcurrencyShutdownOnError {
 
 	public static void main(String... args) throws Exception {
-		WebServiceHelper.waitForUser("Press enter to continue.");
+		CommonUtils.waitForUser("Press enter to continue.");
 
 		ConcurrencyShutdownOnError instance = new ConcurrencyShutdownOnError();
-		String result = instance.callWebServices();
+		String result = instance.runTasks();
 		System.out.println(result);
 
-		WebServiceHelper.waitForUser("Press enter to exit.");
+		CommonUtils.waitForUser("Press enter to exit.");
 
 	}
 
-	private String callWebServices() throws Exception {
+	private String runTasks() throws Exception {
 
 		var tasks = List.<Callable<String>>of(
 				() -> CommonUtils.task("A", 500),
 				() -> CommonUtils.task("B", 1500),
 				() -> CommonUtils.task("C", 1000),
-				() -> CommonUtils.task("B", 100, true)
+				() -> CommonUtils.task("D", 100, true)
 				);
 		
 		

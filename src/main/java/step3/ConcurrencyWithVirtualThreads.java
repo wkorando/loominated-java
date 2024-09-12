@@ -15,13 +15,11 @@ import common.CommonUtils;
 public class ConcurrencyWithVirtualThreads {
 
 	public static void main(String... args) throws Exception {
-//		WebServiceHelper.waitForUser("Press enter to continue.");
+		CommonUtils.waitForUser("Press enter to continue.");
 
 		var instance = new ConcurrencyWithVirtualThreads();
 		String results = instance.callWebServices();
 		System.out.println(results);
-
-//		WebServiceHelper.waitForUser("Press enter to exit.");
 	}
 
 	private String callWebServices() throws Exception {

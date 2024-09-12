@@ -1,5 +1,8 @@
 package common;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 public class CommonUtils {
@@ -42,6 +45,7 @@ public class CommonUtils {
 	public static String task(String value, long executionTime, boolean throwException) {
 		executionTime(executionTime);
 		if (throwException) {
+			System.out.println("Throwing exception!");
 			throw new RuntimeException(String.format("""
 					Task failed!
 					value: %s
@@ -54,7 +58,7 @@ public class CommonUtils {
 					"value" : "%s"
 				}
 				""", value);
-		System.out.println("Result of taks: " + result);
+		System.out.println("Result of task: " + result);
 		return result;
 	}
 
@@ -71,5 +75,11 @@ public class CommonUtils {
 			// demo.
 			e.printStackTrace();
 		}
+	}
+
+	public static void waitForUser(String message) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println(message);
+		reader.readLine();
 	}
 }

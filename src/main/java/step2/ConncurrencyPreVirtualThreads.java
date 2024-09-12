@@ -9,8 +9,6 @@ import java.util.concurrent.Future.State;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import com.fly.us.WebServiceHelper;
-
 import common.CommonUtils;
 
 public class ConncurrencyPreVirtualThreads {
@@ -20,17 +18,17 @@ public class ConncurrencyPreVirtualThreads {
 //	final static ExecutorService executor = Executors.newCachedThreadPool();
 	
 	public static void main(String... args) throws Exception {
-		WebServiceHelper.waitForUser("Press enter to continue.");
+		CommonUtils.waitForUser("Press enter to continue.");
 
 		var instance = new ConncurrencyPreVirtualThreads();
-		String results = instance.callWebServices();
+		String results = instance.runTasks();
 		System.out.println(results);
 
-		WebServiceHelper.waitForUser("Press enter to exit.");
+		CommonUtils.waitForUser("Press enter to exit.");
 		executor.shutdown();
 	}
 	
-	private String callWebServices() throws Exception {
+	private String runTasks() throws Exception {
 
 		var tasks = executor.invokeAll(List.<Callable<String>>of(
 				() -> CommonUtils.task("A", 500),

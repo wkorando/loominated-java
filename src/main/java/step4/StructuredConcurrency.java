@@ -13,7 +13,7 @@ public class StructuredConcurrency {
 
 	public static void main(String... args) throws Throwable {
 
-//		WebServiceHelper.waitForUser("Press enter to continue.");
+		CommonUtils.waitForUser("Press enter to continue.");
 
 		var instance = new StructuredConcurrency();
 		String results = instance.callWebServices();
@@ -26,9 +26,9 @@ public class StructuredConcurrency {
 		Joiner<String, Stream<Subtask<String>>> joiner = Joiner.allSuccessfulOrThrow();
 		try (var scope = StructuredTaskScope.open(joiner)) {
 
-			Subtask<String> task = scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("A", 4500));
+			scope.fork(() -> CommonUtils.task("B", 5500));
+			scope.fork(() -> CommonUtils.task("C", 5000));
 			return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
 		} catch (Exception e) {
 			throw e;

@@ -19,34 +19,32 @@ public class MultiExecutionStructuredConcurrency {
 
 	public static void main(String... args) throws Throwable {
 
-//		WebServiceHelper.waitForUser("Press enter to continue.");
+		CommonUtils.waitForUser("Press enter to continue.");
 
 		final var instance = new MultiExecutionStructuredConcurrency();
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
-			var tasks = executor.invokeAll(List.<Callable<String>>of(() -> {
-				return instance.callWebServices();
+			executor.invokeAll(List.<Callable<String>>of(() -> {
+				return instance.callWebServices(true);
 			}, () -> {
-				return instance.callWebServices();
+				return instance.callWebServices(false);
 			}, () -> {
-				return instance.callWebServices();
+				return instance.callWebServices(false);
 			}));
-
-			System.out.println(tasks.stream().map(Future::resultNow).collect(Collectors.joining(", ", "{ ", " }")));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-//		WebServiceHelper.waitForUser("Press enter to exit.");
 	}
 
-	private String callWebServices() throws Exception {
+	private String callWebServices(boolean throwError) throws Exception {
 		
 		try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
+			scope.fork(() -> CommonUtils.task("A", 4500, throwError));
+			scope.fork(() -> CommonUtils.task("B", 5500));
+			scope.fork(() -> CommonUtils.task("C", 5000));
+			return scope.join().map(Subtask::get).collect(Collectors.joining(", ", "{ ", " }"));
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		}
 	}

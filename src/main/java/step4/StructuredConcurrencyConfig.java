@@ -26,11 +26,11 @@ public class StructuredConcurrencyConfig {
 
 	private String callWebServices() throws Throwable {
 		try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow(),
-				cf -> cf.withTimeout(Duration.ofMillis(4000L)))) {
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
+				cf -> cf.withTimeout(Duration.ofMillis(1000L)))) {
+			scope.fork(() -> CommonUtils.task("A", 10000));
+			scope.fork(() -> CommonUtils.task("B", 500));
+			scope.fork(() -> CommonUtils.task("C", 500));
+			scope.fork(() -> CommonUtils.task("D", 500));
 			return scope.join().map(Subtask::get)
 					.collect(Collectors.joining(", ", "{ ", " }"));
 		} catch (Exception e) {

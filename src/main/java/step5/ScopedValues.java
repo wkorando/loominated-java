@@ -7,18 +7,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.fly.us.WebServiceHelper;
+import common.CommonUtils;
 
 public class ScopedValues {
 	final static ScopedValue<Integer> TIME = ScopedValue.newInstance();
 	public static void main(String... args) throws Throwable {
 
-		WebServiceHelper.waitForUser("Press enter to continue.");
+		CommonUtils.waitForUser("Press enter to continue.");
 
 		ScopedValues instance = new ScopedValues();
 		String results = instance.callWebServices();
 		System.out.println(results);
-		WebServiceHelper.waitForUser("Press enter to exit.");
+		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
 	private String callWebServices() throws Throwable {

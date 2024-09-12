@@ -4,21 +4,19 @@ import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
 import java.util.concurrent.TimeUnit;
 
-import com.fly.us.WebServiceHelper;
-
 import common.CommonUtils;
 
 public class StructuredConcurrencyShutdownOnSuccess {
 
 	public static void main(String... args) throws Throwable {
 
-		WebServiceHelper.waitForUser("Press enter to continue.");
+		CommonUtils.waitForUser("Press enter to continue.");
 
 		StructuredConcurrencyShutdownOnSuccess instance = new StructuredConcurrencyShutdownOnSuccess();
 		String result = instance.callWebServices();
 		System.out.println(result);
 
-		WebServiceHelper.waitForUser("Press enter to exit.");
+		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
 	private String callWebServices() throws Throwable {

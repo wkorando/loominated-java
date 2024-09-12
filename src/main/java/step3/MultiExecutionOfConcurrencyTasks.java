@@ -15,37 +15,37 @@ import common.CommonUtils;
 public class MultiExecutionOfConcurrencyTasks {
 
 	public static void main(String... args) throws Exception {
-//		WebServiceHelper.waitForUser("Press enter to continue.");
+		CommonUtils.waitForUser("Press enter to continue.");
 		final var instance = new MultiExecutionOfConcurrencyTasks();
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
-			var tasks = executor.invokeAll(List.<Callable<String>>of(
-			() -> {
+			executor.invokeAll(List.<Callable<String>>of(
+			   () -> {
 				return instance.callWebServices(true);
-			}, 
-			() -> {
+			}, () -> {
 				return instance.callWebServices(false);
-			},
-			() -> {
+			}, () -> {
 				return instance.callWebServices(false);
 			}));
-
-			System.out.println(tasks.stream().map(Future::resultNow).collect(Collectors.joining(", ", "{ ", " }")));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-//		WebServiceHelper.waitForUser("Press enter to exit.");
 	}
 
-	private String callWebServices(boolean stall) throws Exception {
+	private String callWebServices(boolean throwError) throws Exception {
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 			var tasks = executor.invokeAll(List.<Callable<String>>of(
-				() -> CommonUtils.task("A", 500),
-				() -> CommonUtils.task("B", 1500),
-				() -> CommonUtils.task("C", 1000)
-				));
+					() -> CommonUtils.task("A", 4500),
+					() -> CommonUtils.task("B", 5500), 
+					() -> CommonUtils.task("C", 5000, throwError)));
 
 			return tasks.stream().map(Future::resultNow).collect(Collectors.joining(", ", "{ ", " }"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 }

@@ -3,20 +3,18 @@ package step1;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.fly.us.WebServiceHelper;
-
 import common.CommonUtils;
 
 public class SerialSolution {
 
 	public static void main(String... args) throws Exception {
-		WebServiceHelper.waitForUser("Press enter to start.");
+		CommonUtils.waitForUser("Press enter to start.");
 
 		var instance = new SerialSolution();
 		String result = instance.runTasks();
 
 		System.out.println(result);
-		WebServiceHelper.waitForUser("Press enter to exit.");
+		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
 	private String runTasks() throws Exception {
