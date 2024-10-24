@@ -1,4 +1,4 @@
-package step2;
+package step1;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -18,13 +18,13 @@ public class ConncurrencyPreVirtualThreads {
 //	final static ExecutorService executor = Executors.newCachedThreadPool();
 	
 	public static void main(String... args) throws Exception {
-		CommonUtils.waitForUser("Press enter to continue.");
+//		CommonUtils.waitForUser("Press enter to continue.");
 
 		var instance = new ConncurrencyPreVirtualThreads();
 		String results = instance.runTasks();
 		System.out.println(results);
 
-		CommonUtils.waitForUser("Press enter to exit.");
+//		CommonUtils.waitForUser("Press enter to exit.");
 		executor.shutdown();
 	}
 	

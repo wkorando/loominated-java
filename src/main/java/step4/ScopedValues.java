@@ -1,4 +1,4 @@
-package step5;
+package step4;
 
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
@@ -16,13 +16,14 @@ public class ScopedValues {
 		CommonUtils.waitForUser("Press enter to continue.");
 
 		ScopedValues instance = new ScopedValues();
-		String results = instance.callWebServices();
+		String results = instance.runTasks();
 		System.out.println(results);
 		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
-	private String callWebServices() throws Throwable {
+	private String runTasks() throws Throwable {
 		return ScopedValue.<Integer>where(TIME, 1000).call(() -> {
+			
 			try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
 				scope.fork(() -> {
 					String result;
@@ -45,7 +46,7 @@ public class ScopedValues {
 					System.out.println(result);
 					return result;
 				});
-				
+
 				return scope.join()
 						.map(Subtask::get)
 						.collect(Collectors.joining(", ", "{ ", " }"));

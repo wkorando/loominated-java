@@ -1,4 +1,4 @@
-package step4;
+package step3;
 
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
@@ -16,20 +16,21 @@ public class StructuredConcurrency {
 		CommonUtils.waitForUser("Press enter to continue.");
 
 		var instance = new StructuredConcurrency();
-		String results = instance.callWebServices();
+		String results = instance.runTasks();
 		System.out.println(results);
-
-//		WebServiceHelper.waitForUser("Press enter to exit.");
 	}
 
-	private String callWebServices() throws Throwable {
+	private String runTasks() throws Throwable {
 		Joiner<String, Stream<Subtask<String>>> joiner = Joiner.allSuccessfulOrThrow();
+
 		try (var scope = StructuredTaskScope.open(joiner)) {
 
-			scope.fork(() -> CommonUtils.task("A", 4500));
-			scope.fork(() -> CommonUtils.task("B", 5500));
-			scope.fork(() -> CommonUtils.task("C", 5000));
+			scope.fork(() -> CommonUtils.task("A", 500));
+			scope.fork(() -> CommonUtils.task("B", 1500));
+			scope.fork(() -> CommonUtils.task("C", 1000));
+			
 			return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
+
 		} catch (Exception e) {
 			throw e;
 		}

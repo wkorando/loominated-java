@@ -1,4 +1,4 @@
-package step4;
+package step3;
 
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
@@ -12,29 +12,29 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class StructuredConcurrencyCustom {
+public class StructuredConcurrencyCustomShutdownPolicy {
 
 	public static void main(String... args) throws Throwable {
 
 //		WebServiceHelper.continueExecuting("Press enter to continue.");
 		System.out.println(
 				"Thread: " + Thread.currentThread().threadId() + " isVirtual: " + Thread.currentThread().isVirtual());
-		var instance = new StructuredConcurrencyCustom();
-		String results = instance.callWebServices();
+		var instance = new StructuredConcurrencyCustomShutdownPolicy();
+		String results = instance.runTasks();
 		System.out.println(results);
 
 //		WebServiceHelper.continueExecuting("Press enter to exit.");
 	}
 
-	private String callWebServices() throws Throwable {
+	private String runTasks() throws Throwable {
 		try (var scope = StructuredTaskScope
 				.<String, Stream<Subtask<String>>>open(Joiner.allUntil(new CancelAfterTwoFailures<String>()))) {
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			scope.fork(() -> CommonUtils.task("A", 500));
-			return scope.join().map(Subtask::get)
+			scope.fork(() -> CommonUtils.task("A", 500, true));
+			scope.fork(() -> CommonUtils.task("B", 1500, true));
+			scope.fork(() -> CommonUtils.task("C", 2500));
+			scope.fork(() -> CommonUtils.task("D", 3500));
+			scope.fork(() -> CommonUtils.task("E", 4500));
+			return scope.join().filter(s -> s.state() == State.SUCCESS). map(Subtask::get)
 					.collect(Collectors.joining(", ", "{ ", " }"));
 		} catch (Exception e) {
 			throw e;
@@ -50,7 +50,5 @@ class CancelAfterTwoFailures<T> implements Predicate<Subtask<? extends T>> {
 	public boolean test(Subtask<? extends T> subtask) {
 		return subtask.state() == Subtask.State.FAILED 
 				&& failedCount.incrementAndGet() >= 2;
-		
-		
 	}
 }

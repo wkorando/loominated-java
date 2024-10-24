@@ -1,4 +1,4 @@
-package step3;
+package step2;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -21,11 +21,11 @@ public class MultiExecutionOfConcurrencyTasks {
 
 			executor.invokeAll(List.<Callable<String>>of(
 			   () -> {
-				return instance.callWebServices(true);
+				return instance.runTasks(true);
 			}, () -> {
-				return instance.callWebServices(false);
+				return instance.runTasks(false);
 			}, () -> {
-				return instance.callWebServices(false);
+				return instance.runTasks(false);
 			}));
 			
 		} catch (Exception e) {
@@ -34,7 +34,7 @@ public class MultiExecutionOfConcurrencyTasks {
 
 	}
 
-	private String callWebServices(boolean throwError) throws Exception {
+	private String runTasks(boolean throwError) throws Exception {
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 			var tasks = executor.invokeAll(List.<Callable<String>>of(

@@ -1,21 +1,22 @@
-package step3;
+package step2;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import common.CommonUtils;
 
-public class ConcurrencyWithTaskErrorAndErrorHandling {
+public class ConcurrencyWithTaskError {
 
 	public static void main(String... args) throws Exception {
-		CommonUtils.waitForUser("Press enter to continue.");
+//		CommonUtils.waitForUser("Press enter to continue.");
 
-		var instance = new ConcurrencyWithTaskErrorAndErrorHandling();
+		var instance = new ConcurrencyWithTaskError();
 		String result = instance.runTasks();
 		System.out.println(result);
-		CommonUtils.waitForUser("Press enter to exit.");
+//		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
 	private String runTasks() throws Exception {
@@ -30,14 +31,7 @@ public class ConcurrencyWithTaskErrorAndErrorHandling {
 //			
 			
 			return tasks.stream()
-					.map(f -> {
-							try{
-								return f.get();
-							}catch(Exception e) {
-								e.printStackTrace();
-								throw new RuntimeException(e);
-							}
-						})
+					.map(Future::resultNow)
 					.collect(Collectors.joining(", ", "{ ", " }"));
 		} catch (Exception e) {
 			e.printStackTrace();

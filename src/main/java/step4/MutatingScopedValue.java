@@ -1,4 +1,4 @@
-package step5;
+package step4;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +19,12 @@ public class MutatingScopedValue {
 		CommonUtils.waitForUser("Press enter to continue.");
 
 		MutatingScopedValue instance = new MutatingScopedValue();
-		String results = instance.callWebServices();
+		String results = instance.runTasks();
 		System.out.println(results);
 		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
-	private String callWebServices() throws Throwable {
+	private String runTasks() throws Throwable {
 		List<String> cache = new ArrayList<String>();
 		cache.add("HELLO");
 		return ScopedValue.where(CACHE, cache).call(() -> {

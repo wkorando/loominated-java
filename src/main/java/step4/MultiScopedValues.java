@@ -1,4 +1,4 @@
-package step5;
+package step4;
 
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
@@ -14,16 +14,12 @@ public class MultiScopedValues {
 	final static ScopedValue<String> NAME = ScopedValue.newInstance();
 
 	public static void main(String... args) throws Throwable {
-
-		CommonUtils.waitForUser("Press enter to continue.");
-
 		MultiScopedValues instance = new MultiScopedValues();
-		String results = instance.callWebServices();
+		String results = instance.runTasks();
 		System.out.println(results);
-		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
-	private String callWebServices() throws Throwable {
+	private String runTasks() throws Throwable {
 		return ScopedValue.where(TIME, 1000).where(NAME, "hello").call(() -> {
 			try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
 				scope.fork(() -> {
@@ -54,7 +50,7 @@ public class MultiScopedValues {
 						return NAME.get() + "d";
 					});
 					System.out.println(result);
-					System.out.println(NAME.get() + "d");				
+					System.out.println(NAME.get() + "d");
 					return result;
 				});
 
@@ -62,9 +58,6 @@ public class MultiScopedValues {
 			} catch (Exception e) {
 				throw e;
 			}
-		}
-				
-				);
+		});
 	}
-
 }

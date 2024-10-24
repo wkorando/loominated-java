@@ -1,4 +1,4 @@
-package step3;
+package step2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +16,13 @@ import common.CommonUtils;
 public class ConcurrencyShutdownOnError {
 
 	public static void main(String... args) throws Exception {
-		CommonUtils.waitForUser("Press enter to continue.");
+//		CommonUtils.waitForUser("Press enter to continue.");
 
 		ConcurrencyShutdownOnError instance = new ConcurrencyShutdownOnError();
 		String result = instance.runTasks();
 		System.out.println(result);
 
-		CommonUtils.waitForUser("Press enter to exit.");
+//		CommonUtils.waitForUser("Press enter to exit.");
 
 	}
 

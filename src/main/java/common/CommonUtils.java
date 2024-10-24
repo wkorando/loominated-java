@@ -22,9 +22,10 @@ public class CommonUtils {
 	 *         {<br/>
 	 *         &nbsp;&nbsp;&nbsp;"value" : ${value}<br/>
 	 *         }<br/>
+	 * @throws InterruptedException 
 	 * 
 	 */
-	public static String task(String value, long executionTime) {
+	public static String task(String value, long executionTime) throws InterruptedException {
 		return task(value, executionTime, false);
 	}
 
@@ -39,10 +40,11 @@ public class CommonUtils {
 	 * @param executionTime  - How long, in milliseconds, this task should take to
 	 *                       execute.
 	 * @param throwException - Should this task throw an exception? Exception will
-	 *                       be thrown after finishing executionTime.
+	 *                       be thrown after completing executionTime.
 	 * @return
+	 * @throws InterruptedException - Will often be thrown as a result of cancel propagation
 	 */
-	public static String task(String value, long executionTime, boolean throwException) {
+	public static String task(String value, long executionTime, boolean throwException) throws InterruptedException {
 		executionTime(executionTime);
 		if (throwException) {
 			System.out.println("Throwing exception!");
@@ -66,14 +68,14 @@ public class CommonUtils {
 	 * Sleeps the execution thread for the passed in value.
 	 * 
 	 * @param executionTime - how long the thread should sleep in milliseconds.
+	 * @throws InterruptedException 
 	 */
-	private static void executionTime(long executionTime) {
+	private static void executionTime(long executionTime) throws InterruptedException {
 		try {
 			TimeUnit.MILLISECONDS.sleep(executionTime);
 		} catch (InterruptedException e) {
-			// Just eating this exception, it shouldn't happen and isn't relevant to the
-			// demo.
-			e.printStackTrace();
+			System.out.println("Interrupt received");
+			throw e;
 		}
 	}
 
