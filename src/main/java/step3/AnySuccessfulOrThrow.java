@@ -9,27 +9,27 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class StructuredConcurrency {
+public class AnySuccessfulOrThrow {
 
 	public static void main(String... args) throws Throwable {
 
 		CommonUtils.waitForUser("Press enter to continue.");
 
-		var instance = new StructuredConcurrency();
+		var instance = new AnySuccessfulOrThrow();
 		String results = instance.runTasks();
 		System.out.println(results);
 	}
 
 	private String runTasks() throws Throwable {
-		Joiner<String, Stream<Subtask<String>>> joiner = Joiner.allSuccessfulOrThrow();
+		Joiner<String, String> joiner = Joiner.anySuccessfulResultOrThrow();
 
 		try (var scope = StructuredTaskScope.open(joiner)) {
-
+			scope.fork(() -> CommonUtils.task("D", 100, true));
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("B", 1500));
 			scope.fork(() -> CommonUtils.task("C", 1000));
 			
-			return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
+			return scope.join();
 
 		} catch (Exception e) {
 			throw e;

@@ -29,11 +29,10 @@ public class ConcurrencyWithVirtualThreads {
 			System.out.println(test.get()) ;			
 			
 			
-			
 			var tasks = executor.invokeAll(List.<Callable<String>>of(
 					() -> CommonUtils.task("A", 500),
 					() -> CommonUtils.task("B", 1500),
-					() -> CommonUtils.task("C", 1000000)
+					() -> CommonUtils.task("C", 10000000)
 					));
 			
 			return tasks.stream()

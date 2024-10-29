@@ -8,13 +8,13 @@ public class ScopeValueExample {
 			System.out.println(Thread.currentThread().getName() + ": " + NAME.get());
 			try {
 				Thread.ofVirtual().start(() -> {
-//					try {
-//						Thread.sleep(1000L);
-//
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
+					try {
+						Thread.sleep(1000L);
+
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 						// This fails
 						System.out.println(Thread.currentThread().getName() + ": " + NAME.get());
 					}).join();

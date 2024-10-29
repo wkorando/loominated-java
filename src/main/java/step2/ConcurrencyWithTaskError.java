@@ -11,12 +11,9 @@ import common.CommonUtils;
 public class ConcurrencyWithTaskError {
 
 	public static void main(String... args) throws Exception {
-//		CommonUtils.waitForUser("Press enter to continue.");
-
 		var instance = new ConcurrencyWithTaskError();
 		String result = instance.runTasks();
 		System.out.println(result);
-//		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
 	private String runTasks() throws Exception {
