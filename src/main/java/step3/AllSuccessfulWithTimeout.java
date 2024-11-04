@@ -11,19 +11,18 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class StructuredConcurrencyTimeoutWithConfig {
+public class AllSuccessfulWithTimeout {
 
 	public static void main(String... args) throws Throwable {
-		System.out.println(
-				"Thread: " + Thread.currentThread().threadId() + " isVirtual: " + Thread.currentThread().isVirtual());
-		var instance = new StructuredConcurrencyTimeoutWithConfig();
+		var instance = new AllSuccessfulWithTimeout();
 		String results = instance.runTasks();
 		System.out.println(results);
 	}
 
 	private String runTasks() throws Throwable {
-		try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow(),
-				cf -> cf.withTimeout(Duration.ofMillis(1000L)))) {
+		Joiner<String, Stream<Subtask<String>>> allSuccessful = Joiner.allSuccessfulOrThrow();
+
+		try (var scope = StructuredTaskScope.open(allSuccessful, cf -> cf.withTimeout(Duration.ofMillis(1000L)))) {
 			scope.fork(() -> CommonUtils.task("A", 10000));
 			scope.fork(() -> CommonUtils.task("B", 500));
 			scope.fork(() -> CommonUtils.task("C", 500));

@@ -1,8 +1,10 @@
 # Loominated Java
 
-The purpose of this project is to introduce and demonstrate the three central features of [Project Loom](https://openjdk.org/projects/loom/); [Virtual Threads](#virtual-threads), [Structured Concurrency](#structured-concurrency), and [Scoped Values](#scoped-values). Primarily the project is demonstrating using Structured Concurrency to break down a unit of work and execute it as concurrent tasks. 
+The purpose of this project is to introduce and demonstrate the three central features of [Project Loom](https://openjdk.org/projects/loom/); [Virtual Threads](#virtual-threads), [Structured Concurrency](#structured-concurrency), and [Scoped Values](#scoped-values). Primarily the project is demonstrating how to use the Structured Concurrency API, which improve the writing, reading, debugging, and operational characteristics of breaking down a unit of work into tasks that can be executed concurrently. 
 
 You can view the accompanying presentation for this project here: https://wkorando.github.io/presentations/loominated-java/
+
+If you are more interested in Scoped Values, be sure to check out this project: https://github.com/wkorando/project-loom-framework/
 
 ## Virtual Threads
 
@@ -10,7 +12,7 @@ The central feature of Project Loom, virtual threads separate the concept of thr
 
 ## Structured Concurrency
 
-Structured Concurrency, currently in preview as of JDK 24, is designed to improve the experience of writing concurrent code. Structured concurrency introduces a new programming model to Java greatly simplifying the writing (and reading) of concurrent blocks of code, as well as error handling and debugging. Both of which will be covered in this project. 
+Structured Concurrency, [currently in preview as of JDK 24](https://openjdk.org/jeps/8340343), is designed to improve the experience of writing concurrent code in Java. Structured concurrency introduces a new programming model that allows a Java developer to decompose a unit of work into tasks to be executed concurrently, and provide an API for defining how the results of the tasks should be handled and the conditions for when task execution should be cancelled. Additionally structured concurrency provides other runtime benefits like creating a relationship between the parent thread and the subtasks that can help when debugging, which will be covered later.  
 
 ## Scoped Values
 
@@ -20,6 +22,8 @@ With the introduction of virtual threads, and the possibility of tens of thousan
 https://openjdk.org/jeps/8338456
 
 ## About the Project
+
+Below is a technical overview of the code examples and how to run this project locally. 
 
 ### Running the Project
 
@@ -113,20 +117,38 @@ When writing concurrent code in Java, one of the difficulties is the lack of a r
 
 ### Step 3 - Concurrent Programming with Structured Concurrency
 
-#### Default Joiner Policies
+
+```java
+Joiner<String, Stream<Subtask<String>>> joiner = Joiner.allSuccessfulOrThrow();
+try (var scope = StructuredTaskScope.open(joiner)) {
+
+	scope.fork(...task);
+	scope.fork(...task);
+	scope.fork(...task);
+	
+	return scope.join().//
+
+} catch (InterruptedException e) {
+	throw e;
+}
+```
+
+#### Provided Joiner Implementations
 
 Several Joiner policies are already provided, covering many of the common needs when executing tasks concurrently. They are:
 
-* [allSuccessfulOrThrow](src/main/java/step3/AllSuccessfulOrThrow.java) - waits for all Subtasks to complete successfully, or, if any fail, throws and exception and interrupts the execution of any still running tasks.
-* [anySuccessfulOrThrow](src/main/java/step3/AnySuccessfulOrThrow.java) - waits for the first successful task to complete, and returns the result. Cancels the execution of tasks that do not complete.
-* [awaitAllSuccessfulOrThrow](src/main/java/step3/AwaitAllSuccessfulOrThrow.java) - 
-* [awaitAll](src/main/java/step3/AwaitAll.java) -
+* [Joiner<T, Stream<Subtask<T>>> allSuccessfulOrThrow](src/main/java/step3/AllSuccessfulOrThrow.java) - waits for all `Subtasks` to complete successfully, or, if any fail, throws an exception and interrupts the execution of any still running tasks.
+* [Joiner<T, T> anySuccessfulOrThrow](src/main/java/step3/AnySuccessfulOrThrow.java) - waits for the first successful `Subtask` to complete, and returns the result. Cancels the execution of tasks that do not complete. All tasks must fail for it to throw. 
+* [Joiner<T, Void> awaitAllSuccessfulOrThrow](src/main/java/step3/AwaitAllSuccessfulOrThrow.java) - 
+* [Joiner<T, Void> awaitAll](src/main/java/step3/AwaitAll.java) -
 
-There is also the `allUntil(Predicate)` which allows for customization of when a execution should be terminated, this is covered in more detail under the [Custom Cancellation Policies](#custom-cancellation-policies)
+There is also the `allUntil(Predicate)` which allows for customization of when a execution should be terminated, this is covered in more detail under the [Custom Joiner Policies](#custom-joiner-policies)
+
+#### Custom Joiner Policies
+
+[Joiner<T, Stream<Subtask<T>>> allUntil(Predicate<Subtask<? extends T>>)](/src/main/java/step3/AllUntil.java) - allows a user to define their own condition for when the StructureTaskScope should be shutdown. The user has access to the `Subtasks` that have been forked in the StructuredTaskScope, which provides uses considerable flexibility to creating shutdown policies that match their unique business needs. 
 
 #### Configuring the Joiner
-
-#### Custom Cancellation Policies
 
 
 

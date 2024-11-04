@@ -10,13 +10,13 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class StructuredConcurrencyTimeoutWithPredicate {
+public class AllUntilTimeout {
 
 	public static void main(String... args) throws Throwable {
 
 		System.out.println(
 				"Thread: " + Thread.currentThread().threadId() + " isVirtual: " + Thread.currentThread().isVirtual());
-		var instance = new StructuredConcurrencyTimeoutWithPredicate();
+		var instance = new AllUntilTimeout();
 		String results = instance.runTasks();
 		System.out.println(results);
 	}

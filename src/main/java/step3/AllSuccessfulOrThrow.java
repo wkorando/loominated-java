@@ -21,9 +21,9 @@ public class AllSuccessfulOrThrow {
 	}
 
 	private String runTasks() throws Throwable {
-		Joiner<String, Stream<Subtask<String>>> joiner = Joiner.allSuccessfulOrThrow();
+		Joiner<String, Stream<Subtask<String>>> allSuccessful = Joiner.allSuccessfulOrThrow();
 
-		try (var scope = StructuredTaskScope.open(joiner)) {
+		try (var scope = StructuredTaskScope.open(allSuccessful)) {
 
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("B", 1500));
@@ -31,7 +31,7 @@ public class AllSuccessfulOrThrow {
 			
 			return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
 
-		} catch (Exception e) {
+		} catch (InterruptedException e) {
 			throw e;
 		}
 	}

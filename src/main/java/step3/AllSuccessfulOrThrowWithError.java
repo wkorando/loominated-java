@@ -9,12 +9,12 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class StructuredConcurrencyShutdownOnError {
+public class AllSuccessfulOrThrowWithError {
 	public static void main(String... args) throws Throwable {
 
 //		CommonUtils.waitForUser("Press enter to continue.");
 
-		StructuredConcurrencyShutdownOnError instance = new StructuredConcurrencyShutdownOnError();
+		AllSuccessfulOrThrowWithError instance = new AllSuccessfulOrThrowWithError();
 		String results = instance.runTasks();
 		System.out.println(results);
 //		CommonUtils.waitForUser("Press enter to exit.");

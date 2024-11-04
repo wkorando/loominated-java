@@ -12,14 +12,14 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class StructuredConcurrencyCustomShutdownPolicy {
+public class AllUntilTwoFailures {
 
 	public static void main(String... args) throws Throwable {
 
 //		WebServiceHelper.continueExecuting("Press enter to continue.");
 		System.out.println(
 				"Thread: " + Thread.currentThread().threadId() + " isVirtual: " + Thread.currentThread().isVirtual());
-		var instance = new StructuredConcurrencyCustomShutdownPolicy();
+		var instance = new AllUntilTwoFailures();
 		String results = instance.runTasks();
 		System.out.println(results);
 

@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class StructuredConcurrencyRollback {
+public class RollbackOnFailure {
 
 	public static void main(String... args) throws Throwable {
 
-		var instance = new StructuredConcurrencyRollback();
+		var instance = new RollbackOnFailure();
 		String results = instance.runTasks();
 		System.out.println(results);
 
