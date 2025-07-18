@@ -11,13 +11,13 @@ import com.fly.us.WebServiceHelper;
 
 import common.CommonUtils;
 
-public class NestedStructuredConcurrency {
+public class Part10NestedStructuredConcurrency {
 
 	public static void main(String... args) throws Throwable {
 
 //		WebServiceHelper.waitForUser("Press enter to continue.");
 
-		var instance = new NestedStructuredConcurrency();
+		var instance = new Part10NestedStructuredConcurrency();
 		String results = instance.runTasks();
 		System.out.println(results);
 
@@ -39,7 +39,7 @@ public class NestedStructuredConcurrency {
 					nestedScope.fork(() -> CommonUtils.task(parentResult+"-A", 500));
 					nestedScope.fork(() -> CommonUtils.task(parentResult+"-B", 500));
 					nestedScope.fork(() -> CommonUtils.task(parentResult+"-C", 500));
-					return nestedScope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
+					return nestedScope.join().map(f -> f.get()).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 					
 				} catch (Exception e) {
 					throw e;

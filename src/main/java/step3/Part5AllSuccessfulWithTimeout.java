@@ -11,10 +11,10 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class AllSuccessfulWithTimeout {
+public class Part5AllSuccessfulWithTimeout {
 
 	public static void main(String... args) throws Throwable {
-		var instance = new AllSuccessfulWithTimeout();
+		var instance = new Part5AllSuccessfulWithTimeout();
 		String results = instance.runTasks();
 		System.out.println(results);
 	}
@@ -28,7 +28,7 @@ public class AllSuccessfulWithTimeout {
 			scope.fork(() -> CommonUtils.task("C", 500));
 			scope.fork(() -> CommonUtils.task("D", 500));
 
-			return scope.join().map(Subtask::get).collect(Collectors.joining(", ", "{ ", " }"));
+			return scope.join().map(Subtask::get).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 
 		} catch (Exception e) {
 			throw e;

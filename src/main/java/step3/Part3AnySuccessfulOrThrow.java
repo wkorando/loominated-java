@@ -6,13 +6,13 @@ import java.util.concurrent.TimeUnit;
 
 import common.CommonUtils;
 
-public class AnySuccessfulOrThrow {
+public class Part3AnySuccessfulOrThrow {
 
 	public static void main(String... args) throws Throwable {
 
 		CommonUtils.waitForUser("Press enter to continue.");
 
-		AnySuccessfulOrThrow instance = new AnySuccessfulOrThrow();
+		Part3AnySuccessfulOrThrow instance = new Part3AnySuccessfulOrThrow();
 		String result = instance.runTasks();
 		System.out.println(result);
 

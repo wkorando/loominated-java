@@ -10,13 +10,13 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class AllUntilTimeout {
+public class Part6AllUntilTimeout {
 
 	public static void main(String... args) throws Throwable {
 
 		System.out.println(
 				"Thread: " + Thread.currentThread().threadId() + " isVirtual: " + Thread.currentThread().isVirtual());
-		var instance = new AllUntilTimeout();
+		var instance = new Part6AllUntilTimeout();
 		String results = instance.runTasks();
 		System.out.println(results);
 	}
@@ -30,7 +30,7 @@ public class AllUntilTimeout {
 			scope.fork(() -> CommonUtils.task("D", 500));
 
 			return scope.join().filter(s -> s.state() == State.SUCCESS).map(Subtask::get)
-					.collect(Collectors.joining(", ", "{ ", " }"));
+					.collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 
 		} catch (Exception e) {
 			throw e;

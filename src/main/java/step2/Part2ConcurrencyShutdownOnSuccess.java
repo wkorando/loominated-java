@@ -7,12 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 import common.CommonUtils;
 
-public class ConcurrencyShutdownOnSuccess {
+public class Part2ConcurrencyShutdownOnSuccess {
 
 	public static void main(String... args) throws Exception {
 		CommonUtils.waitForUser("Press enter to continue.");
 
-		ConcurrencyShutdownOnSuccess instance = new ConcurrencyShutdownOnSuccess();
+		Part2ConcurrencyShutdownOnSuccess instance = new Part2ConcurrencyShutdownOnSuccess();
 		String result = instance.runTasks();
 		System.out.println(result);
 
@@ -27,7 +27,7 @@ public class ConcurrencyShutdownOnSuccess {
 			var tasks = List.<Callable<String>>of(
 					() -> CommonUtils.task("A", 500),
 					() -> CommonUtils.task("B", 1500),
-					() -> CommonUtils.task("C", 1000)
+					() -> CommonUtils.task("C", 100000)
 					);
 
 			return executor.invokeAny(tasks);

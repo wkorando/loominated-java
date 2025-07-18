@@ -9,29 +9,29 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class AllSuccessfulOrThrow {
+public class Part13AwaitAllSuccessfulOrThrow {
 
 	public static void main(String... args) throws Throwable {
 
 		CommonUtils.waitForUser("Press enter to continue.");
 
-		var instance = new AllSuccessfulOrThrow();
-		String results = instance.runTasks();
-		System.out.println(results);
+		var instance = new Part13AwaitAllSuccessfulOrThrow();
+		instance.runTasks();
+
 	}
 
-	private String runTasks() throws Throwable {
-		Joiner<String, Stream<Subtask<String>>> allSuccessful = Joiner.allSuccessfulOrThrow();
+	private void runTasks() throws Throwable {
+		Joiner<String, Void> joiner = Joiner.awaitAllSuccessfulOrThrow();
 
-		try (var scope = StructuredTaskScope.open(allSuccessful)) {
+		try (var scope = StructuredTaskScope.open(joiner)) {
 
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("B", 1500));
 			scope.fork(() -> CommonUtils.task("C", 1000));
-			
-			return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
 
-		} catch (InterruptedException e) {
+			scope.join();
+
+		} catch (Exception e) {
 			throw e;
 		}
 	}

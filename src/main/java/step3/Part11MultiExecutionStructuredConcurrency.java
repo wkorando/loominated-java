@@ -15,13 +15,13 @@ import com.fly.us.WebServiceHelper;
 
 import common.CommonUtils;
 
-public class MultiExecutionStructuredConcurrency {
+public class Part11MultiExecutionStructuredConcurrency {
 
 	public static void main(String... args) throws Throwable {
 
 		CommonUtils.waitForUser("Press enter to continue.");
 
-		final var instance = new MultiExecutionStructuredConcurrency();
+		final var instance = new Part11MultiExecutionStructuredConcurrency();
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 			executor.invokeAll(List.<Callable<String>>of(() -> {
@@ -42,7 +42,7 @@ public class MultiExecutionStructuredConcurrency {
 			scope.fork(() -> CommonUtils.task("A", 4500, throwError));
 			scope.fork(() -> CommonUtils.task("B", 5500));
 			scope.fork(() -> CommonUtils.task("C", 5000));
-			return scope.join().map(Subtask::get).collect(Collectors.joining(", ", "{ ", " }"));
+			return scope.join().map(Subtask::get).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

@@ -49,7 +49,7 @@ public class ScopedValues {
 
 				return scope.join()
 						.map(Subtask::get)
-						.collect(Collectors.joining(", ", "{ ", " }"));
+						.collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 			} catch (Exception e) {
 				throw e;
 			}

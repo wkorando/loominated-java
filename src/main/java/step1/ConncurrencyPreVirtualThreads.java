@@ -39,6 +39,6 @@ public class ConncurrencyPreVirtualThreads {
 		return tasks.stream()
 				.filter(t -> t.state() == State.SUCCESS)
 				.map(Future::resultNow)
-				.collect(Collectors.joining(", ", "{ ", " }"));
+				.collect(Collectors.joining(", ", "Combined results:\n {\n", " }"));
 	}
 }

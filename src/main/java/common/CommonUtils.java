@@ -70,7 +70,7 @@ public class CommonUtils {
 	 * @param executionTime - how long the thread should sleep in milliseconds.
 	 * @throws InterruptedException 
 	 */
-	private static void executionTime(long executionTime) throws InterruptedException {
+	public static void executionTime(long executionTime) throws InterruptedException {
 		try {
 			TimeUnit.MILLISECONDS.sleep(executionTime);
 		} catch (InterruptedException e) {

@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class RollbackOnFailure {
+public class Part9RollbackOnFailure {
 
 	public static void main(String... args) throws Throwable {
 
-		var instance = new RollbackOnFailure();
+		var instance = new Part9RollbackOnFailure();
 		String results = instance.runTasks();
 		System.out.println(results);
 
@@ -28,7 +28,7 @@ public class RollbackOnFailure {
 			Subtask<String> task2 = scope.fork(() -> CommonUtils.task("B", 500));
 			Subtask<String> task3 = scope.fork(() -> CommonUtils.task("C", 500));
 			try {
-				return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
+				return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 			} catch (Exception ee) {
 				handleRollback(List.of(task1, task2, task3));
 				throw ee;

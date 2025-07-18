@@ -54,7 +54,7 @@ public class MultiScopedValues {
 					return result;
 				});
 
-				return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "{ ", " }"));
+				return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 			} catch (Exception e) {
 				throw e;
 			}

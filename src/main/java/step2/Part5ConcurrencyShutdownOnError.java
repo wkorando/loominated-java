@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 
 import common.CommonUtils;
 
-public class ConcurrencyShutdownOnError {
+public class Part5ConcurrencyShutdownOnError {
 
 	public static void main(String... args) throws Exception {
 //		CommonUtils.waitForUser("Press enter to continue.");
 
-		ConcurrencyShutdownOnError instance = new ConcurrencyShutdownOnError();
+		Part5ConcurrencyShutdownOnError instance = new Part5ConcurrencyShutdownOnError();
 		String result = instance.runTasks();
 		System.out.println(result);
 
@@ -82,6 +82,6 @@ public class ConcurrencyShutdownOnError {
 				
 		return result.stream()
 				.map(Future::resultNow)
-				.collect(Collectors.joining(", ", "{ ", " }"));
+				.collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 	}
 }

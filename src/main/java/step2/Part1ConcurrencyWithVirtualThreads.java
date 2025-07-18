@@ -13,31 +13,28 @@ import com.fly.us.WebServiceHelper;
 
 import common.CommonUtils;
 
-public class ConcurrencyWithVirtualThreads {
+public class Part1ConcurrencyWithVirtualThreads {
 
 	public static void main(String... args) throws Exception {
 		CommonUtils.waitForUser("Press enter to continue.");
 
-		var instance = new ConcurrencyWithVirtualThreads();
+		var instance = new Part1ConcurrencyWithVirtualThreads();
 		String results = instance.runTasks();
 		System.out.println(results);
 	}
 
 	private String runTasks() throws Exception {
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-			Future<String> test = executor.submit(() -> CommonUtils.task("A", 500));
-			System.out.println(test.get()) ;			
-			
 			
 			var tasks = executor.invokeAll(List.<Callable<String>>of(
 					() -> CommonUtils.task("A", 500),
 					() -> CommonUtils.task("B", 1500),
-					() -> CommonUtils.task("C", 10000000)
+					() -> CommonUtils.task("C", 1000)
 					));
 			
 			return tasks.stream()
 					.map(Future::resultNow)
-					.collect(Collectors.joining(", ", "{ ", " }"));
+					.collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 		}
 	}
 }

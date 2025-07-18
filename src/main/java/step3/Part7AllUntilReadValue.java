@@ -11,12 +11,12 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class AllUntilReadValue {
+public class Part7AllUntilReadValue {
 
 	public static void main(String... args) throws Throwable {
 		System.out.println(
 				"Thread: " + Thread.currentThread().threadId() + " isVirtual: " + Thread.currentThread().isVirtual());
-		var instance = new AllUntilReadValue();
+		var instance = new Part7AllUntilReadValue();
 		String results = instance.runTasks();
 		System.out.println(results);
 	}
@@ -30,7 +30,7 @@ public class AllUntilReadValue {
 			scope.fork(() -> CommonUtils.task("D", 3500));
 			scope.fork(() -> CommonUtils.task("E", 4500));
 			return scope.join().filter(s -> s.state() == State.SUCCESS). map(Subtask::get)
-					.collect(Collectors.joining(", ", "{ ", " }"));
+					.collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 		} catch (Exception e) {
 			throw e;
 		}

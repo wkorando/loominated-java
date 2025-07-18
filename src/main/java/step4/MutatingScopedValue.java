@@ -53,7 +53,7 @@ public class MutatingScopedValue {
 				});
 				
 
-				return scope.join().map(Subtask::get).collect(Collectors.joining(", ", "{ ", " }"));
+				return scope.join().map(Subtask::get).collect(Collectors.joining(", ","Combined results:\n {\n{ ", " }"));
 			} catch (Exception e) {
 				throw e;
 			}

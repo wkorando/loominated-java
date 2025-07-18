@@ -9,26 +9,22 @@ import java.util.stream.Stream;
 
 import common.CommonUtils;
 
-public class AwaitAllSuccessfulOrThrow {
+public class Part12AwaitAll {
 
 	public static void main(String... args) throws Throwable {
-
-		CommonUtils.waitForUser("Press enter to continue.");
-
-		var instance = new AwaitAllSuccessfulOrThrow();
+		var instance = new Part12AwaitAll();
 		instance.runTasks();
-
 	}
 
 	private void runTasks() throws Throwable {
-		Joiner<String, Void> joiner = Joiner.awaitAllSuccessfulOrThrow();
+		Joiner<String, Void> joiner = Joiner.awaitAll();
 
 		try (var scope = StructuredTaskScope.open(joiner)) {
 
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("B", 1500));
 			scope.fork(() -> CommonUtils.task("C", 1000));
-
+			
 			scope.join();
 
 		} catch (Exception e) {

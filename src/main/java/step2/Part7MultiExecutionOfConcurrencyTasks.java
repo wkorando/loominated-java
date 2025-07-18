@@ -12,11 +12,11 @@ import com.fly.us.WebServiceHelper;
 
 import common.CommonUtils;
 
-public class MultiExecutionOfConcurrencyTasks {
+public class Part7MultiExecutionOfConcurrencyTasks {
 
 	public static void main(String... args) throws Exception {
 		CommonUtils.waitForUser("Press enter to continue.");
-		final var instance = new MultiExecutionOfConcurrencyTasks();
+		final var instance = new Part7MultiExecutionOfConcurrencyTasks();
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 			executor.invokeAll(List.<Callable<String>>of(
@@ -31,6 +31,8 @@ public class MultiExecutionOfConcurrencyTasks {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		CommonUtils.waitForUser("Press enter to complete.");
 
 	}
 
@@ -42,7 +44,7 @@ public class MultiExecutionOfConcurrencyTasks {
 					() -> CommonUtils.task("B", 5500), 
 					() -> CommonUtils.task("C", 5000, throwError)));
 
-			return tasks.stream().map(Future::resultNow).collect(Collectors.joining(", ", "{ ", " }"));
+			return tasks.stream().map(Future::resultNow).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

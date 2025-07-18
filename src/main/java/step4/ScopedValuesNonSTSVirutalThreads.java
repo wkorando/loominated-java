@@ -14,17 +14,17 @@ public class ScopedValuesNonSTSVirutalThreads {
 
 		});
 		ScopedValuesNonSTSVirutalThreads instance = new ScopedValuesNonSTSVirutalThreads();
-//		String results = instance.callWebServices();
-//		System.out.println(results);
+		String results = instance.callWebServices();
+		System.out.println(results);
 		CommonUtils.waitForUser("Press enter to exit.");
 	}
 
-//	private String callWebServices() throws Throwable {
-//		return ScopedValue.<String>where(NAME, "Hello World").call(() -> {
-//
-//			return NAME.get();
-//
-//		});
-//	}
+	private String callWebServices() throws Throwable {
+		return ScopedValue.<String>where(NAME, "Hello World").call(() -> {
+
+			return NAME.get();
+
+		});
+	}
 
 }
