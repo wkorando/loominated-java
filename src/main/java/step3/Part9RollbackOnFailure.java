@@ -21,14 +21,13 @@ public class Part9RollbackOnFailure {
 	}
 
 	private String runTasks() throws Throwable {
-		Joiner<String, Stream<Subtask<String>>> joiner = Joiner.allSuccessfulOrThrow();
-		try (var scope = StructuredTaskScope.open(joiner)) {
+		try (var scope = StructuredTaskScope.open(Joiner.<String>allSuccessfulOrThrow())) {
 
 			Subtask<String> task1 = scope.fork(() -> CommonUtils.task("A", 1000, true));
 			Subtask<String> task2 = scope.fork(() -> CommonUtils.task("B", 500));
 			Subtask<String> task3 = scope.fork(() -> CommonUtils.task("C", 500));
 			try {
-				return scope.join().map(f -> f.get()).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
+				return scope.join().stream().collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 			} catch (Exception ee) {
 				handleRollback(List.of(task1, task2, task3));
 				throw ee;

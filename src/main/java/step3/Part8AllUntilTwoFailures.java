@@ -28,13 +28,13 @@ public class Part8AllUntilTwoFailures {
 
 	private String runTasks() throws Throwable {
 		try (var scope = StructuredTaskScope
-				.<String, Stream<Subtask<String>>>open(Joiner.allUntil(new CancelAfterTwoFailures<String>()))) {
+				.open(Joiner.<String>allUntil(new CancelAfterTwoFailures<String>()))) {
 			scope.fork(() -> CommonUtils.task("A", 500, true));
 			scope.fork(() -> CommonUtils.task("B", 1500, true));
 			scope.fork(() -> CommonUtils.task("C", 2500));
 			scope.fork(() -> CommonUtils.task("D", 3500));
 			scope.fork(() -> CommonUtils.task("E", 4500));
-			return scope.join().filter(s -> s.state() == State.SUCCESS). map(Subtask::get)
+			return scope.join().stream().filter(s -> s.state() == State.SUCCESS). map(Subtask::get)
 					.collect(Collectors.joining(", ","Combined results:\n {\n{ ", " }"));
 		} catch (Exception e) {
 			throw e;

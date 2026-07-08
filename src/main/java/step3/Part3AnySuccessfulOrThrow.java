@@ -2,7 +2,6 @@ package step3;
 
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
-import java.util.concurrent.TimeUnit;
 
 import common.CommonUtils;
 
@@ -20,7 +19,7 @@ public class Part3AnySuccessfulOrThrow {
 	}
 
 	private String runTasks() throws Throwable {
-		try (var scope = StructuredTaskScope.<String, String>open(Joiner.anySuccessfulResultOrThrow())) {
+		try (var scope = StructuredTaskScope.open(Joiner.<String>anySuccessfulOrThrow())) {
 
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("B", 1500));

@@ -22,14 +22,13 @@ public class Part7AllUntilReadValue {
 	}
 
 	private String runTasks() throws Throwable {
-		try (var scope = StructuredTaskScope
-				.<String, Stream<Subtask<String>>>open(Joiner.allUntil(new ReadValues<String>()))) {
+		try (var scope = StructuredTaskScope.open(Joiner.<String>allUntil(new ReadValues<String>()))) {
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("B", 1500));
 			scope.fork(() -> CommonUtils.task("C", 2500));
 			scope.fork(() -> CommonUtils.task("D", 3500));
 			scope.fork(() -> CommonUtils.task("E", 4500));
-			return scope.join().filter(s -> s.state() == State.SUCCESS). map(Subtask::get)
+			return scope.join().stream().filter(s -> s.state() == State.SUCCESS).map(Subtask::get)
 					.collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 		} catch (Exception e) {
 			throw e;
@@ -43,14 +42,13 @@ class ReadValues<T> implements Predicate<Subtask<? extends T>> {
 
 	@Override
 	public boolean test(Subtask<? extends T> subtask) {
-		if(subtask.state() == Subtask.State.SUCCESS) {
+		if (subtask.state() == Subtask.State.SUCCESS) {
 			return subtask.get().equals("""
 					{
 						"value" : "C"
 					}
 					""");
 		}
-		return subtask.state() == Subtask.State.FAILED 
-				&& failedCount.incrementAndGet() >= 2;
+		return subtask.state() == Subtask.State.FAILED && failedCount.incrementAndGet() >= 2;
 	}
 }

@@ -20,15 +20,13 @@ public class Part5AllSuccessfulWithTimeout {
 	}
 
 	private String runTasks() throws Throwable {
-		Joiner<String, Stream<Subtask<String>>> allSuccessful = Joiner.allSuccessfulOrThrow();
-
-		try (var scope = StructuredTaskScope.open(allSuccessful, cf -> cf.withTimeout(Duration.ofMillis(1000L)))) {
+		try (var scope = StructuredTaskScope.open(Joiner.<String>allSuccessfulOrThrow(), cf -> cf.withTimeout(Duration.ofMillis(1000L)))) {
 			scope.fork(() -> CommonUtils.task("A", 10000));
 			scope.fork(() -> CommonUtils.task("B", 500));
 			scope.fork(() -> CommonUtils.task("C", 500));
 			scope.fork(() -> CommonUtils.task("D", 500));
 
-			return scope.join().map(Subtask::get).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
+			return scope.join().stream().collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 
 		} catch (Exception e) {
 			throw e;

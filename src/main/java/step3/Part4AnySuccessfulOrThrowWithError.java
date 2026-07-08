@@ -2,10 +2,6 @@ package step3;
 
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Joiner;
-import java.util.concurrent.StructuredTaskScope.Subtask;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import common.CommonUtils;
 
@@ -21,9 +17,9 @@ public class Part4AnySuccessfulOrThrowWithError {
 	}
 
 	private String runTasks() throws Throwable {
-		Joiner<String, String> joiner = Joiner.anySuccessfulResultOrThrow();
 
-		try (var scope = StructuredTaskScope.open(joiner)) {
+		try (var scope = StructuredTaskScope.open(Joiner.<String>anySuccessfulOrThrow())) {
+
 			scope.fork(() -> CommonUtils.task("D", 100, true));
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("B", 1500));
@@ -31,7 +27,8 @@ public class Part4AnySuccessfulOrThrowWithError {
 			
 			return scope.join();
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			e.printStackTrace(System.err);
 			throw e;
 		}
 	}

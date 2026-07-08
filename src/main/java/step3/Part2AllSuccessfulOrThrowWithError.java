@@ -21,16 +21,17 @@ public class Part2AllSuccessfulOrThrowWithError {
 	}
 
 	private String runTasks() throws Throwable {
-		try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
+		try (var scope = StructuredTaskScope.open(Joiner.<String>allSuccessfulOrThrow())) {
 			 
 			scope.fork(() -> CommonUtils.task("A", 500));
 			scope.fork(() -> CommonUtils.task("B", 1000));
 			scope.fork(() -> CommonUtils.task("C", 1500));
 			scope.fork(() -> CommonUtils.task("D", 100,true));
-			return scope.join().map(Subtask::get)
+			return scope.join().stream()
 					.collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 		
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		}
 	}

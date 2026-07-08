@@ -19,7 +19,7 @@ public class Part11MultiExecutionStructuredConcurrency {
 
 	public static void main(String... args) throws Throwable {
 
-		CommonUtils.waitForUser("Press enter to continue.");
+//		CommonUtils.waitForUser("Press enter to continue.");
 
 		final var instance = new Part11MultiExecutionStructuredConcurrency();
 		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
@@ -38,11 +38,11 @@ public class Part11MultiExecutionStructuredConcurrency {
 
 	private String callWebServices(boolean throwError) throws Exception {
 		
-		try (var scope = StructuredTaskScope.<String, Stream<Subtask<String>>>open(Joiner.allSuccessfulOrThrow())) {
-			scope.fork(() -> CommonUtils.task("A", 4500, throwError));
-			scope.fork(() -> CommonUtils.task("B", 5500));
-			scope.fork(() -> CommonUtils.task("C", 5000));
-			return scope.join().map(Subtask::get).collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
+		try (var scope = StructuredTaskScope.open(Joiner.<String>allSuccessfulOrThrow())) {
+			scope.fork(() -> CommonUtils.task("A", 14500, throwError));
+			scope.fork(() -> CommonUtils.task("B", 15500));
+			scope.fork(() -> CommonUtils.task("C", 15000));
+			return scope.join().stream().collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

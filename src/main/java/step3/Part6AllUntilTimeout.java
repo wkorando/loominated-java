@@ -23,13 +23,13 @@ public class Part6AllUntilTimeout {
 
 	private String runTasks() throws Throwable {
 		try (var scope = StructuredTaskScope
-				.<String, Stream<Subtask<String>>>open(Joiner.allUntil(new Timeout<String>()))) {
+				.open(Joiner.<String>allUntil(new Timeout<String>()))) {
 			scope.fork(() -> CommonUtils.task("A", 10000));
 			scope.fork(() -> CommonUtils.task("B", 500));
 			scope.fork(() -> CommonUtils.task("C", 500));
 			scope.fork(() -> CommonUtils.task("D", 500));
 
-			return scope.join().filter(s -> s.state() == State.SUCCESS).map(Subtask::get)
+			return scope.join().stream().filter(s -> s.state() == State.SUCCESS).map(Subtask::get)
 					.collect(Collectors.joining(", ", "Combined results:\n {\n{ ", " }"));
 
 		} catch (Exception e) {
